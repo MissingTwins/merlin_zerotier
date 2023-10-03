@@ -1,0 +1,16 @@
+#!/bin/sh
+
+ENABLED=yes
+PRECMD="modprobe tun"
+PROCS=zerotier-one
+#POSTCMD="cru a ZeroTierDaemon */1 * * * * /opt/etc/init.d/S90zerotier-one.sh start"
+ARGS="-d"
+PREARGS=""
+DESC=$PROCS
+PATH=/opt/sbin:/opt/bin:/opt/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+[ -z "$(which $PROCS)" ] && exit 0
+
+. /opt/etc/init.d/rc.func
+
+
