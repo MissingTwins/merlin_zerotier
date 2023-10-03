@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo "wan-event Enter" 
+logger -t "wan-event" -c "WAN"$1", eventType="$2" " -p user.notice
+
+
+if [ "connected" == "$2" ]; then
+	  logger -t "wan-event" "Detect connection" -p user.notice
+	  #cru a matrixbot "*/1 * * * * /jffs/scripts/matrixbot.sh wan-event"
+
+	  /jffs/scripts/myservices.sh
+fi
+
+echo "wan-event leaving" 
+logger -t "wan-event" "Leaving" -p user.notice
