@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Force Changed UI Language
+#/jffs/scripts/Dictionary_MSG.sh
+
+# Zerotier Needed
+modprobe tun
+
+# Set Zerotier First Run flag
+touch /tmp/first-start.flag
