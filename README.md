@@ -1,7 +1,6 @@
 # merilin_zerotier
 Zerotier daemon for ac68u ac86u ax86u
-
-Path map  
+Path map
 ```
 /jffs/scripts/
     init-start
@@ -11,10 +10,10 @@ Path map
     cru_guard.sh
     lan-route-table.sh
 
-/opt/init.d/
+/opt/etc/init.d/
     S90zerotier-one.sh
     S91zerotier-one
 ```
 
-Related discussion:  
+Related discussion:
 https://www.snbforums.com/threads/a-guide-about-installing-zerotier-on-asus-ac68u-router.42648/
