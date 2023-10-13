@@ -11,9 +11,9 @@ LOG_TAG=`basename "$0"`
 LOG_TAG="DarthTwins $LOG_TAG"
 printf "\n\n$(date '+%m/%d %T') LOG_TAG=$LOG_TAG\n"
 
-$(bash -c ": > /dev/tty" )
+$(sh -c ": > /dev/tty" )
 [ $? != 0 ] || { IS_CONSOLE=1; echo "This is a console"; }
- 
+
 # -----------------------------------------
 # Example : sysLOG "We have a problem!" error
 # Argu    : $1 logs
@@ -34,7 +34,7 @@ function sysLOG() {
 # Input   : None
 # Return  : None
 function iptablesINS() {
-	
+
 	local reRAW RECODE CMD_STR
     CMD_STR="iptables -I $1"
     reRAW=$( iptables -C $1 2>&1 )
@@ -42,7 +42,7 @@ function iptablesINS() {
 	reRAW=$( echo -n "$reRAW" | head -n 1  )
 	if [ $RECODE -ge 2 ]; then
 		sysLOG "ip6tables -I $1 Err=$reRAW" error
-    elif [ $RECODE -eq 1 ]; then 
+    elif [ $RECODE -eq 1 ]; then
         reRAW=$( eval $CMD_STR 2>&1 )
         [ $? != 0 ] && sysLOG "Error $CMD_STR" error || sysLOG "Success $CMD_STR" notice
 	else
@@ -56,7 +56,7 @@ function iptablesINS() {
 # Input   : None
 # Return  : None
 function ip6tablesINS() {
-	
+
 	local reRAW RECODE CMD_STR
 	CMD_STR="ip6tables -I $1"
     reRAW=$( ip6tables -C $1 2>&1 )
@@ -65,7 +65,7 @@ function ip6tablesINS() {
 	# echo "=$RECODE |$1 | RE="$reRAW
     if [ $RECODE -ge 2 ]; then
         sysLOG "ip6tables -I $1 Err=$reRAW" error
-    elif [ $RECODE -eq 1 ]; then 
+    elif [ $RECODE -eq 1 ]; then
         reRAW=$( eval $CMD_STR 2>&1 )
         [ $? != 0 ] && sysLOG "Error $CMD_STR" error || sysLOG "Success $CMD_STR" notice
 	else
@@ -106,10 +106,10 @@ function psCHK() {
    #PS_LIST=$( $PS_CMD 2>&1 )
    #echo "$PS_LIST" > /tmp/ps_list_`sed 's/[. ].*//' /proc/uptime`.txt
    #printf "KEY_WORD=$KEY_WORD PS_LIST=${#PS_LIST}\n"
-   #printf "$PS_LIST"  | grep -Fi "$CMD_STR" 
-   #printf "$PS_LIST"  | grep -Fi "$KEY_WORD" 
-   #printf "$PS_LIST"  | awk '$0 ~ /awk/{next} $0 ~ /'"$KEY_WORD"'/{ print $0"<--awk"; err=0; exit} BEGIN{err=1} END{exit err}' 
-   #printf "$PS_LIST"  | awk '$0 ~ /awk/{next} $0 ~ /'"$KEY_WORD"'/{ print $0"<--awk-keyword"; err=0; exit} BEGIN{err=1} END{exit err}' 
+   #printf "$PS_LIST"  | grep -Fi "$CMD_STR"
+   #printf "$PS_LIST"  | grep -Fi "$KEY_WORD"
+   #printf "$PS_LIST"  | awk '$0 ~ /awk/{next} $0 ~ /'"$KEY_WORD"'/{ print $0"<--awk"; err=0; exit} BEGIN{err=1} END{exit err}'
+   #printf "$PS_LIST"  | awk '$0 ~ /awk/{next} $0 ~ /'"$KEY_WORD"'/{ print $0"<--awk-keyword"; err=0; exit} BEGIN{err=1} END{exit err}'
    #RE=$( printf "$PS_LIST"  | grep -Fi "$KEY_WORD"  )
     ( $PS_CMD  | grep -Fi "$CMD_STR" | grep -v grep )
     if [ $? != 0 ]; then
@@ -132,7 +132,7 @@ function baseZTRoute() {
 	local ZT_NETWORK
 	ZT_NETWORK=$1
 	iptables -C INPUT -i zt+ -j ACCEPT
-	if [ $? != 0 ]; then 
+	if [ $? != 0 ]; then
 		iptables -I INPUT 1 -i zt+ -j ACCEPT
 		iptables -t nat -I PREROUTING -i zt+ -d $ZT_NETWORK -p tcp -m multiport --dport 21,22,80 -j DNAT --to-destination `nvram get lan_ipaddr`
 		#iptables -t nat -I PREROUTING -i zt+ -s 10.9.8.0/24 -d 10.9.8.0/24 -p tcp -m multiport --dport 21,22,80 -j DNAT --to-destination `nvram get lan_ipaddr`
@@ -173,19 +173,19 @@ function ipChk()
 
 	SEG="[0-9a-fA-F]{1,4}"
 
-	RE_IPV6="([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|"                    
-	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,7}:|"                         
-	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|"         
-	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|"  
-	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|"  
-	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|"  
-	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|"  
-	RE_IPV6="${RE_IPV6}[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|"       
-	RE_IPV6="${RE_IPV6}:((:[0-9a-fA-F]{1,4}){1,7}|:)|"                     
-	RE_IPV6="${RE_IPV6}fe08:(:[0-9a-fA-F]{1,4}){2,2}%[0-9a-zA-Z]{1,}|"     
-	RE_IPV6="${RE_IPV6}::(ffff(:0{1,4}){0,1}:){0,1}${RE_IPV4}|"            
-	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,4}:${RE_IPV4}"   
-   
+	RE_IPV6="([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|"
+	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,7}:|"
+	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|"
+	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|"
+	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|"
+	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|"
+	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|"
+	RE_IPV6="${RE_IPV6}[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|"
+	RE_IPV6="${RE_IPV6}:((:[0-9a-fA-F]{1,4}){1,7}|:)|"
+	RE_IPV6="${RE_IPV6}fe08:(:[0-9a-fA-F]{1,4}){2,2}%[0-9a-zA-Z]{1,}|"
+	RE_IPV6="${RE_IPV6}::(ffff(:0{1,4}){0,1}:){0,1}${RE_IPV4}|"
+	RE_IPV6="${RE_IPV6}([0-9a-fA-F]{1,4}:){1,4}:${RE_IPV4}"
+
     if [ "$1" == "6" ]; then
         echo -n "$2" | awk '$0 !~ /'"$RE_IPV6"'/{print "not an ipv6=>"$0; exit 1}'
     else
@@ -201,7 +201,7 @@ function ipChk()
 # Return  : ip
 function GetExtIP()
 {
-    if [ "$1" == 4 ]; then 
+    if [ "$1" == 4 ]; then
         ip=$(curl -s -X GET https://checkip.amazonaws.com)
     else
         #ip=$(curl -s -X GET https://api6.my-ip.io/ip)
@@ -211,7 +211,7 @@ function GetExtIP()
 
 # -----------------------------------------
 # Example : getNSIP 4 sub.domain.com
-# Argu    : 4 or 6 
+# Argu    : 4 or 6
 # Input   : $dnsrecord
 #           $DNS_SERVER
 #           $RE_IPV6
@@ -220,14 +220,14 @@ function getNSIP() {
 
     # make sure dns result is avail
      local nsRAW=$(nslookup $dnsrecord $DNS_SERVER)
-    [ $? != 0 ] && { 
+    [ $? != 0 ] && {
         sysLOG "nslookup failed $nsRAW" notice;
         exit 1 ;
     }
-    
+
     if [ "$1" == 4 ]; then
         local nsIPv4s=$(echo -n "$nsRAW" | awk 'tolower($0) ~ /name/{ while( getline ){ if(match($0, /'$RE_IPV4'/)){ print substr($0, RSTART, RLENGTH);  }}}') ;
-        
+
         # filtering Private IPs and accept the first Public IP
         local regexp4p='(^127\.)|(^192\.168\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)'
         nsIP=$(echo -n "$nsIPv4s" | awk '$0 !~ /'$regexp4p'/{print $0;err=0; exit 0} BEGIN{err=1} END{exit err}');
@@ -237,5 +237,5 @@ function getNSIP() {
         # filtering Private IPs and accept the first Public IP
         nsIP=$(echo -n "$nsIPv6s" | awk '$0 == "::1" {next} $0 ~ /^fe80::/ {next} {print $0;err=0; exit 0} BEGIN{err=1} END{exit err}' )
     fi
-        
+
 }
