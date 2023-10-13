@@ -11,7 +11,7 @@ LOG_TAG=`basename "$0"`
 LOG_TAG="DarthTwins $LOG_TAG"
 printf "\n\n$(date '+%m/%d %T') LOG_TAG=$LOG_TAG\n"
 
-$(bash -c ": > /dev/tty" )
+$(sh -c ": > /dev/tty" )
 [ $? != 0 ] || { IS_CONSOLE=1; echo "This is a console"; }
  
 # -----------------------------------------
