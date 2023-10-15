@@ -135,12 +135,8 @@ function baseZTRoute() {
 	if [ $? != 0 ]; then
 		iptables -I INPUT 1 -i zt+ -j ACCEPT
 		iptables -t nat -I PREROUTING -i zt+ -d $ZT_NETWORK -p tcp -m multiport --dport 21,22,80 -j DNAT --to-destination `nvram get lan_ipaddr`
-		#iptables -t nat -I PREROUTING -i zt+ -s 10.9.8.0/24 -d 10.9.8.0/24 -p tcp -m multiport --dport 21,22,80 -j DNAT --to-destination `nvram get lan_ipaddr`
-		#iptables -I INPUT 1 -i `nvram get wan0_gw_ifname` -p icmp -j DROP
-		#iptables -I INPUT 1 -i ztzlgf7vul -p icmp -j ACCEPT
 		iptables -t nat -A POSTROUTING -o br0 -s $ZT_NETWORK -j SNAT --to-source `nvram get lan_ipaddr`
 		iptables -I FORWARD -i zt+ -d `nvram get lan_ipaddr`/24 -j ACCEPT
-		#iptables -I FORWARD -i zt+ -d 192.168.7.0/24 -j ACCEPT
 		iptables -I FORWARD -i br0 -d $ZT_NETWORK -j ACCEPT
 		sysLOG "zt+ rules added $ZT_NETWORK" notice
 	else
