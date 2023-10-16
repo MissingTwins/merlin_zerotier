@@ -1,0 +1,8 @@
+#!/bin/sh
+
+logger -t "firewall-start" -c "WAN:"$1" " -p user.notice
+
+## Check route for LANs
+source /jffs/scripts/lan-route-table.sh
+
+logger -t "firewall-start" "Leaving" -p user.notice
