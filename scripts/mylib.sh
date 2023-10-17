@@ -22,9 +22,9 @@ $(sh -c ": > /dev/tty" )
 # Return  : None
 function sysLOG() {
     if [ -n "$IS_CONSOLE" ]; then
-        echo "$1" | tee /dev/tty | tr -d '\n' | logger -t $LOG_TAG -p user.$2;
+        echo "$1" | tee /dev/tty | tr -d '\n' | logger -t "$LOG_TAG" -p "user.$2";
     else
-        echo "$1" | tr -d '\n' | logger -t $LOG_TAG -p user.$2;
+        echo "$1" | tr -d '\n' | logger -t "$LOG_TAG" -p "user.$2";
     fi
 }
 
