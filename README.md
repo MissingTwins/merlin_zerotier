@@ -127,9 +127,20 @@ LAN. On Computer 1 or the Laptop, simply add 172.24.0.12 as a printer and print.
 
 You can use zerotier like a traditional VPN. By turning on "allow Default Route"
 in a mobile client's zerotier app, you can encrypt and redirect all its internet
-traffic through your home router. See [this page for further
-information](https://zerotier.atlassian.net/wiki/spaces/SD/pages/7110693/Overriding+Default+Route+Full+Tunnel+Mode). We have not tried this with our Asus setup as yet, but will add more information
-when we get a chance.
+traffic through your home router. Follow these steps:
+
+1. Change the value of the FULL_TUNNEL variable to `"yes"` in `/jffs/scripts/lan-route-table.sh`
+and reboot the router.
+2. In your Zerotier console, add a managed route for `0.0.0.0/0` via your router's Zerotier IP.
+3. In your client, enable full tunnel mode. If your client has a Zerotier GUI
+   (Mac, Windows, iOS, Android), you should be able to find a configuration
+   option labeled *allow Default Route*, *Route all traffic through Zerotier*,
+   or something like that. If you don't have a GUI (Linux), execute  `sudo
+   zerotier-cli set <networkId> allowDefault=1`. For Linux you may also need to
+   set `rp_filter`.
+
+See [this page for further
+information](https://zerotier.atlassian.net/wiki/spaces/SD/pages/7110693/Overriding+Default+Route+Full+Tunnel+Mode). [Also see this...](https://www.digitalocean.com/community/tutorials/getting-started-software-defined-networking-creating-vpn-zerotier-one)
 
 ## Hints and Tips:
 #### Don’t use Zerotier Managed Routes
